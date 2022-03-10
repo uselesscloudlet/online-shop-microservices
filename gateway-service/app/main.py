@@ -127,7 +127,6 @@ async def delete_user(id: str, request: Request, response: Response):
     pass
 
 # Goods:
-#! All actions on goods use JWTBearer
 # post add_good(request, good model)
 # get list_goods(request)
 # get show_good(id, request)
@@ -219,6 +218,8 @@ async def delete_good(id: str, request: Request, response: Response):
 # Orders:
 # post make_order(request, order)
 # get get_user_orders(request)
+# put update_order(id, changed_order, request)
+
 @route(
     request_method=orders_router.post,
     service_url=ORDERS_URL,
@@ -235,6 +236,7 @@ async def delete_good(id: str, request: Request, response: Response):
 async def make_order(order: OrderIn, request: Request, response: Response):
     pass
 
+
 @route(
     request_method=orders_router.get,
     service_url=ORDERS_URL,
@@ -250,6 +252,7 @@ async def make_order(order: OrderIn, request: Request, response: Response):
 )
 async def get_user_orders(request: Request, response: Response):
     pass
+
 
 @route(
     request_method=orders_router.put,
