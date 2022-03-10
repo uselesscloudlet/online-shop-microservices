@@ -1,0 +1,65 @@
+version: '3.7'
+
+services:
+  mongo:
+    image: 'mongo'
+    container_name: 'mongo-container'
+    environment:
+      - DB_URL=mongodb://localhost
+      - DB_NAME=microservices
+    ports:
+    - 27017:27017
+
+  gateway-service:
+    build: ./gateway-service
+    command: uvicorn "app.main:app" --reload --host "0.0.0.0" --port 8000
+    volumes:
+    - ./gateway-service/:/app/
+    ports:
+    - 8000:8000
+    environment:
+      - DB_URL=mongodb://mongo:27017/
+      - DB_NAME=microservices
+      - APP_NAME=Gateway API
+      - SERVICE_URL=http://gateway-service:8000
+      - GOODS_URL=http://goods-service:8000
+      - ORDERS_URL=http://orders-service:8000
+      - USERS_URL=http://users-service:8000
+      - JWT_SECRET=d698b293d4ec6ab52a0f3aab1e4503fef65afa19a92a3c9b
+      - JWT_ALGORITHM=HS256
+  
+  goods-service:
+    build: ./goods-service
+    command: uvicorn "app.main:app" --reload --host "0.0.0.0" --port 8000
+    volumes:
+      - ./goods-service/:/app/
+    environment:
+      - DB_URL=mongodb://mongo:27017/
+      - DB_NAME=microservices
+      - APP_NAME=Goods API
+      - JWT_SECRET=d698b293d4ec6ab52a0f3aab1e4503fef65afa19a92a3c9b
+      - JWT_ALGORITHM=HS256
+  
+  orders-service:
+    build: ./orders-service
+    command: uvicorn "app.main:app" --reload --host "0.0.0.0" --port 8000
+    volumes:
+      - ./orders-service/:/app/
+    environment:
+      - DB_URL=mongodb://mongo:27017/
+      - DB_NAME=microservices
+      - APP_NAME=Orders API
+      - JWT_SECRET=d698b293d4ec6ab52a0f3aab1e4503fef65afa19a92a3c9b
+      - JWT_ALGORITHM=HS256
+  
+  users-service:
+    build: ./users-service
+    command: uvicorn "app.main:app" --reload --host "0.0.0.0" --port 8000
+    volumes:
+      - ./users-service/:/app/
+    environment:
+      - DB_URL=mongodb://mongo:27017/
+      - DB_NAME=microservices
+      - APP_NAME=Users API
+      - JWT_SECRET=d698b293d4ec6ab52a0f3aab1e4503fef65afa19a92a3c9b
+      - JWT_ALGORITHM=HS256
